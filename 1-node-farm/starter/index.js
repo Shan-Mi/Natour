@@ -35,6 +35,11 @@ const url = require("url");
 // request variable & response variable
 // Here is the response we are going to send back.
 // incoming request, sending reponse
+
+// this code runs only once,
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
+const dataObj = JSON.parse(data);
+
 const server = http.createServer((req, res) => {
   const pathName = req.url;
 
@@ -42,11 +47,16 @@ const server = http.createServer((req, res) => {
     res.end("This is the overview");
   } else if (pathName === "/product") {
     res.end("This is the product");
+  } else if (pathName === "/api") {
+    // fs.readFile("./dev-data/data.json");
+    res.writeHead(200, {
+      "Content-type": "application/json",
+    });
+    res.end(data);
   } else {
     res.writeHead(404, {
-      'Content-type': 'text/html',
-      'my-own-header':
-    })
+      "Content-type": "text/html",
+    });
     res.end("<h1>Page not found!</h1>");
   }
 });
