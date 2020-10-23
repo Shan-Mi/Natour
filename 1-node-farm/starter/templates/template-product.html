@@ -20,6 +20,10 @@
       box-sizing: inherit;
     }
 
+    a {
+      text-decoration: none;
+    }
+
     html {
       font-size: 62.5%;
       box-sizing: border-box;
@@ -263,7 +267,9 @@
 
 <body>
   <div class="container">
-    <h1>🌽 Node Farm 🥦</h1>
+    <a href="/overview">
+      <h1>🌽 Node Farm 🥦</h1>
+    </a>
 
     <figure class="product">
       <div class="product__organic {%NOT_ORGANIC%}">
@@ -291,7 +297,7 @@
         <p><span class="emoji-left">🏷</span>{%PRICE%}€</p>
       </div>
 
-      <a href="#" class="product__link">
+      <a href="/overview" class="product__link">
         <span class="emoji-left">🛒</span>
         <span>Add to shopping card ({%PRICE%}€)</span>
       </a>
