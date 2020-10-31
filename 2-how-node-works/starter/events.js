@@ -1,6 +1,14 @@
+// This is a class, then we are going to create instances of it.
 const EventEmitter = require("events");
 
-const myEmitter = new EventEmitter(); // create a new EventEmitter instance
+// class Sales inherits everything from EventEmitter
+class Sales extends EventEmitter {
+  constructor() {
+    super();
+  }
+}
+
+const myEmitter = new Sales();
 
 myEmitter.on("newSale", () => {
   console.log("There was a new sale");
