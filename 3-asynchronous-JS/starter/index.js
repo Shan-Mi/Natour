@@ -38,12 +38,23 @@ const getDogPic = async () => {
   return "2: READY 🐕 ";
 };
 
-console.log("Step 1: Will get dog pics!");
-getDogPic().then((x) => {
-  console.log(x);
-  console.log("Step 2: Done get dog pics!");
-})
-.catch(err => console.log('Error 🤯 '));
+(async () => {
+  try {
+    console.log("1: Will get dog pics!");
+    const x = await getDogPic();
+    console.log(x);
+    console.log("3: Done getting dog pics");
+  } catch (err) {
+    console.log('Error 🤯 ')
+  }
+})();
+
+// console.log("Step 1: Will get dog pics!");
+// getDogPic().then((x) => {
+//   console.log(x);
+//   console.log("Step 2: Done get dog pics!");
+// })
+// .catch(err => console.log('Error 🤯 '));
 
 /* readFilePro(`${__dirname}/dog.txt`)
   .then((data) => {
