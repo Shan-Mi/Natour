@@ -64,7 +64,7 @@ app.post('/api/v1/tours', (req, res) => {
   // res.send('done');
 });
 
-app.patch('/api/v1/tours/:id', (req, res) => {
+app.delete('/api/v1/tours/:id', (req, res) => {
   const id = Number(req.params.id);
   const tour = tours.find((tour) => tour.id === id);
   if (!tour) {
@@ -73,11 +73,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       message: 'Invalid ID',
     });
   }
-  res.status(200).json({
+  res.status(204).json({
     status: 'success',
-    data: {
-      tour: '<Updated data here...>',
-    },
+    data: null,
   });
 });
 
