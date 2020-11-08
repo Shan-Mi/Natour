@@ -12,8 +12,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-// route handler
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -21,11 +20,9 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
-});
+};
 
-// now this x is an optional params
-// app.get('/api/v1/tours/:id/:x?', (req, res) => {
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
   const id = Number(req.params.id);
   const tour = tours.find((tour) => tour.id === id);
   if (tour) {
@@ -42,9 +39,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
       message: 'Invalid ID',
     });
   }
-});
+};
 
-app.post('/api/v1/tours', (req, res) => {
+const postTour = (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
@@ -62,9 +59,26 @@ app.post('/api/v1/tours', (req, res) => {
     }
   );
   // res.send('done');
-});
+};
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
+  const id = Number(req.params.id);
+  const tour = tours.find((tour) => tour.id === id);
+  if (!tour) {
+    res.status(404).json({
+      status: 'failed',
+      message: 'Invalid ID',
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: '<Updated tour here...>',
+    },
+  });
+};
+
+const deleteTour = (req, res) => {
   const id = Number(req.params.id);
   const tour = tours.find((tour) => tour.id === id);
   if (!tour) {
@@ -77,8 +91,22 @@ app.delete('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: null,
   });
-});
+};
 
+// route handler
+// app.get('/api/v1/tours', getAllTours);
+// app.get('/api/v1/tours/:id', getTour);
+// app.post('/api/v1/tours', postTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+// we can chain getTour and postTour together
+app.route('/api/v1/tours').get(getAllTours).post(postTour);
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 // begin a server
 const port = 3000;
 app.listen(port, () => {
