@@ -2,7 +2,9 @@
 
 [course slides available for download](theory-lectures.pdf)
 
-## Attention!
+Use starter code to start each section, and **final code to compare it with your own code whenever something doesn't work**!
+
+Plus, I made all the [course slides available for download](theory-lectures.pdf), to make it easier to follow along the theory videos.
 
 Installation for mongodb is different from tutorial videos.
 
