@@ -17,8 +17,27 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then((con) => console.log('DB connection successful!'));
+  .then(() => console.log('DB connection successful!'));
 // error handling to be added later
+
+const tourSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name'],
+    unique: true,
+  }, //schema type options, can be different type
+  rating: {
+    type: Number,
+    default: 4.5,
+  },
+  price: {
+    type: Number,
+    required: [true, 'A tour must have a price'],
+  },
+});
+
+// create a model
+const Tour = mongoose.model('Tour', tourSchema);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
