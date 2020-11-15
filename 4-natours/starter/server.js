@@ -11,15 +11,14 @@ const DB = process.env.DATABASE.replace(
 // options to handle with deprecation warnings
 // this connect will return a promise
 mongoose
+  // .connect(process.env.DATABASE_LOCAL, { // connect to local db
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then((con) => {
-    console.log(con.connections);
-    console.log('DB connection successful!');
-  });
+  .then((con) => console.log('DB connection successful!'));
+// error handling to be added later
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
