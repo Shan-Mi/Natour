@@ -23,7 +23,7 @@ mongoose
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A tour must have a name'],
+    required: [true, 'A tour must have a name'], // a validator
     unique: true,
   }, //schema type options, can be different type
   rating: {
