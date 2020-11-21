@@ -10,6 +10,11 @@ const router = express.Router();
 // Check if body contains the name and price property
 // If not, send back 400 (bad request)
 
+// we use middleware first, to do the query thing
+router
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTours, tourController.getAllTours);
+
 router.route('/').get(tourController.getAllTours).post(tourController.postTour);
 
 router
