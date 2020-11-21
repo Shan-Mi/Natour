@@ -23,11 +23,6 @@ exports.getAllTours = async (req, res) => {
 
     // 2) Sorting
     let query = Tour.find(JSON.parse(queryStr));
-    // const query = Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
 
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
@@ -47,10 +42,25 @@ exports.getAllTours = async (req, res) => {
       query = query.select('-__v');
       // - exclude "__v" field from mongoose db
     }
-    // 2. EXECUTE QUERY
+
+    // 4. Pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+    // page=2&limit=10, 1-10: page 1, 11-20: page 2
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) {
+        throw new Error('This page does not exist');
+      }
+    }
+
+    // EXECUTE QUERY
     const tours = await query;
 
-    // 3. SEND RESPONSE
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
