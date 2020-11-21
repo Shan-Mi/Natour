@@ -159,11 +159,11 @@ exports.getMonthlyPlan = async (req, res) => {
     const year = req.params.year * 1;
     const plan = await Tour.aggregate([
       {
-        $unwind: '$startDate',
+        $unwind: '$startDates',
       },
       {
         $match: {
-          startDate: {
+          startDates: {
             $gte: new Date(`${year}-01-01`),
             $lte: new Date(`${year}-12-31`),
           },
@@ -171,7 +171,7 @@ exports.getMonthlyPlan = async (req, res) => {
       },
       {
         $group: {
-          _id: { $month: '$startDate' },
+          _id: { $month: '$startDates' },
           numTourStart: { $sum: 1 },
           tours: { $push: '$name' },
         },
@@ -191,9 +191,9 @@ exports.getMonthlyPlan = async (req, res) => {
           numTourStarts: -1,
         },
       },
-      // {
-      //   $limit: 6, // only show 6 results
-      // },
+      {
+        $limit: 6, // only show 6 results
+      },
     ]);
 
     res.status(200).json({
