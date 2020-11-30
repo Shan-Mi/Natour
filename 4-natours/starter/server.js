@@ -21,11 +21,17 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log('DB connection successful🥰'));
-// error handling to be added later
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
 // database configuration, error handling, etc. env viriables
+process.on('unhandledRejection', (err) => {
+  console.log(err.name, err.message);
+  console.log('UNHANDLEDED REJECTION!!! 👺 shutting down.');
+  server.close(() => {
+    process.exit(1);
+  });
+});
