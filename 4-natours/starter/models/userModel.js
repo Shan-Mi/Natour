@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-
+const bcrypt = require('bcryptjs');
 // name, email, photo (string), password, passwordConfirm
 const userSchema = new mongoose.Schema({
   name: {
@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     // required: [true, 'A user must confirm password'],
+    // this works only for SAVE
     validate: {
       validator: function (val) {
         return val === this.password;
@@ -33,6 +34,22 @@ const userSchema = new mongoose.Schema({
       message: 'Password must consist',
     },
   },
+});
+
+// between receiving data and store it into the db
+// we have many methods on each document (each user)
+// only run this function only if password was actually modified
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  // to hash password, becrypt
+  // async version -> hash() -> return a promise
+  // Hash the password with cost of 12
+  this.password = await bcrypt.hash(this.password, 12);
+  // Delete passwordConfirm field
+  this.passwordConfirm = undefined;
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
