@@ -1,33 +1,38 @@
 const express = require('express');
-const tourController = require('../controllers/tourController');
-const authController = require('../controllers/authController');
+const {
+  aliasTopTours,
+  getAllTours,
+  getTourStats,
+  getMonthlyPlan,
+  postTour,
+  getTour,
+  updateTour,
+  deleteTour,
+} = require('../controllers/tourController');
+const { protect, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
-// router.param('id', tourController.checkID);
+// router.param('id', checkID);
 
-// router.route('/')(tourController.checkBody)
+// router.route('/')(checkBody)
 // Create a checkBody middleware
 // Check if body contains the name and price property
 // If not, send back 400 (bad request)
 
 // we use middleware first, to do the query thing
-router
-  .route('/top-5-cheap')
-  .get(tourController.aliasTopTours, tourController.getAllTours);
+router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 
-router.route('/tour-stats').get(tourController.getTourStats);
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router.route('/tour-stats').get(getTourStats);
+router.route('/monthly-plan/:year').get(getMonthlyPlan);
 
-router
-  .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.postTour);
+router.route('/').get(protect, getAllTours).post(postTour);
 
 router
   .route('/:id')
-  .get(tourController.getTour)
-  .patch(tourController.updateTour)
-  .delete(tourController.deleteTour);
+  .get(getTour)
+  .patch(updateTour)
+  .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 
 module.exports = router;
+// restrictTo('admin', 'lead-guide'),
