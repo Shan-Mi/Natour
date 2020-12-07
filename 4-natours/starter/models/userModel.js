@@ -64,6 +64,14 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) {
+    return next();
+  }
+  this.passwordChangedAt = Date.now() - 1000; // reduce created time, sometimes this process is slow, and token will be created before this changed to db
+  next();
+});
+
 // instance method, userPassword is hashed, candidatePassword is not hashed
 userSchema.methods.correctPassword = async function (
   candidatePassword,
