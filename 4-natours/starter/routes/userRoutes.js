@@ -5,6 +5,8 @@ const {
   createUser,
   updateUser,
   deleteUser,
+  updateMe,
+  deleteMe,
 } = require('../controllers/userController');
 
 const {
@@ -19,6 +21,8 @@ const {
 const router = express.Router();
 
 router.patch('/updateMyPassword', protect, updatePassword);
+router.patch('/updateMe', protect, updateMe);
+router.patch('/deleteMe', protect, deleteMe);
 
 router.post('/signup', signup);
 router.post('/login', login);

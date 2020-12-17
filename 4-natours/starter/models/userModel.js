@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: { type: Date },
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 // between receiving data and store it into the db
@@ -61,6 +66,13 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   // Delete passwordConfirm field
   this.passwordConfirm = undefined;
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query
+  // before getAllUsers run User.find()
+  this.find({ active: { $ne: false } }); // not equal to
   next();
 });
 
