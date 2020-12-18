@@ -31,6 +31,8 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id);
+  // our query, to fill up this field with this data
+  // we unselect two fields: __v & passwordChangedAt
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));
