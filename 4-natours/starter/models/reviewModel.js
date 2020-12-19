@@ -29,7 +29,11 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.pre(/^find/, function (next) {
   // 2 queries will need longer time
-  this.populate({ path: 'tour', select: 'name' }).populate({
+  // this.populate({ path: 'tour', select: 'name' }).populate({
+  //   path: 'user',
+  //   select: 'name photo',
+  // });
+  this.populate({
     path: 'user',
     select: 'name photo',
   });
