@@ -10,10 +10,7 @@ const {
   deleteTour,
 } = require('../controllers/tourController');
 const { protect, restrictTo } = require('../controllers/authController');
-const {
-  getAllReviews,
-  createReview,
-} = require('../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 const router = express.Router();
 
@@ -38,9 +35,8 @@ router
   .patch(updateTour)
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 
-router
-  .route('/:tourId/reviews')
-  .post(protect, restrictTo('user'), createReview);
+// router is middleware, we can use use on it, mounting a router
+router.use('/:tourId/reviews', reviewRouter);
 
 module.exports = router;
 // restrictTo('admin', 'lead-guide'),

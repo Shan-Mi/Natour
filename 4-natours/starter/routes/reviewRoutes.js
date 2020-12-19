@@ -5,7 +5,10 @@ const {
 } = require('../controllers/reviewController');
 const { protect, restrictTo } = require('../controllers/authController');
 
-const router = express.Router();
+// merge
+// each router has only access to their own params
+// but here we want to get access to uplevel router's params
+const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
