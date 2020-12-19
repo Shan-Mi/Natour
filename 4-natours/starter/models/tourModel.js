@@ -128,6 +128,7 @@ tourSchema.virtual('durationWeeks').get(function () {
 });
 
 // Virtual populate
+// real data is not persist in db
 tourSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tour', // where tour's id is stored
