@@ -10,8 +10,12 @@ const { protect, restrictTo } = require('../controllers/authController');
 // but here we want to get access to uplevel router's params
 const router = express.Router({ mergeParams: true });
 
+// POST /tour/:tourId/reviews/
+// GET /tour/:tourId/reviews/:userId
+// POST /reviews/
+
 router
-  .route('/')
+  .route('/') // since it is nested, now the base actually is /tour/:tourId/reviews/
   .get(getAllReviews)
   .post(protect, restrictTo('user'), createReview);
 
