@@ -56,6 +56,8 @@ const userSchema = new mongoose.Schema({
 // between receiving data and store it into the db
 // we have many methods on each document (each user)
 // only run this function only if password was actually modified
+
+// we need to comment this middleware when we import users json file into db, cuz psw will be encrypt again.
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
@@ -69,18 +71,18 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.pre(/^find/, function (next) {
-  // this points to the current query
-  // before getAllUsers run User.find()
-  this.find({ active: { $ne: false } }); // not equal to
-  next();
-});
-
 userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) {
     return next();
   }
   this.passwordChangedAt = Date.now() - 1000; // reduce created time, sometimes this process is slow, and token will be created before this changed to db
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query
+  // before getAllUsers run User.find()
+  this.find({ active: { $ne: false } }); // not equal to
   next();
 });
 
