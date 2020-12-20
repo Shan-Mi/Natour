@@ -18,10 +18,16 @@ const router = express.Router({ mergeParams: true });
 // GET /tour/:tourId/reviews/:userId
 // POST /reviews/
 
+router.use(protect);
+
 router
   .route('/') // since it is nested, now the base actually is /tour/:tourId/reviews/
   .get(getAllReviews)
-  .post(protect, restrictTo('user'), setTourUserIds, createReview);
+  .post(restrictTo('user'), setTourUserIds, createReview);
 
-router.route('/:id').get(getReview).patch(updateReview).delete(deleteReview);
+router
+  .route('/:id')
+  .get(getReview)
+  .patch(restrictTo('user', 'admin'), updateReview) // only users and admin can edit and delete reviews
+  .delete(restrictTo('user', 'admin'), deleteReview);
 module.exports = router;

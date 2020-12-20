@@ -17,21 +17,29 @@ const {
   forgotPassword,
   resetPassword,
   updatePassword,
+  restrictTo,
 } = require('../controllers/authController');
 
 const router = express.Router();
-
-router.patch('/updateMyPassword', protect, updatePassword);
-
-// by getMe, we get current user's id, then pass it to req.params.id, then reuse getUser
-router.get('/me', protect, getMe, getUser);
-router.patch('/updateMe', protect, updateMe);
-router.patch('/deleteMe', protect, deleteMe);
 
 router.post('/signup', signup);
 router.post('/login', login);
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
+
+// protect all routes that come after this point, cuz middleware runs in sequence.
+router.use(protect);
+
+// don't show below info to public
+router.patch('/updateMyPassword', updatePassword);
+
+// by getMe, we get current user's id, then pass it to req.params.id, then reuse getUser
+router.get('/me', getMe, getUser);
+router.patch('/updateMe', updateMe);
+router.patch('/deleteMe', deleteMe);
+
+// can only run by admin user
+router.use(restrictTo('admin'));
 
 router.route('/').get(getAllUsers).post(createUser);
 
