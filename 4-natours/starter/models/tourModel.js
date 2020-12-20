@@ -127,6 +127,8 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+tourSchema.index({ price: 1 });
+
 // Virtual populate
 // real data is not persist in db
 tourSchema.virtual('reviews', {
