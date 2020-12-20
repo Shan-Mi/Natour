@@ -13,6 +13,12 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+// a simple middleware
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   console.log(req);
   // 1) Create error if user POSTs psw data

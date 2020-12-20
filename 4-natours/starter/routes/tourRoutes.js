@@ -35,7 +35,7 @@ router
   .patch(updateTour)
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 
-// router is middleware, we can use use on it, mounting a router
+// router is middleware, we can use .use on it, mounting a router
 router.use('/:tourId/reviews', reviewRouter);
 
 module.exports = router;

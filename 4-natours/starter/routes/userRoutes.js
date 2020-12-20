@@ -7,6 +7,7 @@ const {
   deleteUser,
   updateMe,
   deleteMe,
+  getMe,
 } = require('../controllers/userController');
 
 const {
@@ -21,6 +22,9 @@ const {
 const router = express.Router();
 
 router.patch('/updateMyPassword', protect, updatePassword);
+
+// by getMe, we get current user's id, then pass it to req.params.id, then reuse getUser
+router.get('/me', protect, getMe, getUser);
 router.patch('/updateMe', protect, updateMe);
 router.patch('/deleteMe', protect, deleteMe);
 
