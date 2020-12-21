@@ -29,6 +29,8 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true }); // tour + user combination always be unique
+
 reviewSchema.pre(/^find/, function (next) {
   // 2 queries will need longer time
   // this.populate({ path: 'tour', select: 'name' }).populate({
@@ -46,7 +48,7 @@ reviewSchema.pre(/^find/, function (next) {
 // aggregation pipline is needed. aggregate method f.ex.
 // this point to current model, so aggregate on the model
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
-  console.log('tourId', tourId);
+  // console.log('tourId', tourId);
   const stats = await this.aggregate([
     {
       $match: { tour: tourId },
@@ -59,7 +61,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
       },
     },
   ]);
-  console.log(stats);
+  // console.log(stats);
 
   if (stats.length > 0) {
     await Tour.findByIdAndUpdate(tourId, {
@@ -82,25 +84,6 @@ reviewSchema.post('save', function () {
   // constructor is the model which create this document
   this.constructor.calcAverageRatings(this.tour);
 });
-
-// need query middleware instead of document middleware
-// findByIdAndUpdate
-// findByIdAndDelete
-// pre will not persist data in the db
-// reviewSchema.pre(/^findOneAnd/, async function (next) {
-//   // this is current query, which has been executed
-//   // we can run this query, then get back the document
-//   this.r = await this.findOne();
-//   // console.log(r);
-//   next();
-// });
-
-// // pass from pre middleware to post middleware
-// reviewSchema.post(/^findOneAnd/, async function (next) {
-//   // this.r = await this.findOne();
-//   // doesnot work here, query has already executed
-//   await this.r.constructor.calcAverageRatings(this.r.tour);
-// });
 
 reviewSchema.post(/^findOneAnd/, async function (docs) {
   if (docs) {
