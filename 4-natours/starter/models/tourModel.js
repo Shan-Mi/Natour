@@ -127,7 +127,12 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
-tourSchema.index({ price: 1 });
+// tourSchema.index({ price: 1 }); // have to delete it from db manually
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+// after each change, we have to re-send get method for a couple of times
+// to make sure it has been updated and fetch back correct result
+// index will cause consuming extra data size on mongodb
 
 // Virtual populate
 // real data is not persist in db
