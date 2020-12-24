@@ -134,7 +134,7 @@ tourSchema.index({ slug: 1 });
 // after each change, we have to re-send get method for a couple of times
 // to make sure it has been updated and fetch back correct result
 // index will cause consuming extra data size on mongodb
-
+tourSchema.index({ startLocation: '2dsphere' });
 // Virtual populate
 // real data is not persist in db
 tourSchema.virtual('reviews', {
@@ -198,9 +198,19 @@ tourSchema.post(/^find/, function (docs, next) {
 });
 
 // AGGREGATION MIDDLEWARE
+// we can check if geoNear is the first, if not we don't do this step.
+// here just comment it out
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   console.log(this.pipeline());
+//   next();
+// });
 tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  console.log(this.pipeline());
+  const [things] = this.pipeline();
+  if (Object.keys(things)[0] !== '$geoNear') {
+    this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  }
+  // console.log(this.pipeline());
   next();
 });
 
