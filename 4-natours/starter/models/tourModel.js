@@ -116,7 +116,8 @@ const tourSchema = new mongoose.Schema(
         day: Number, // when to go
       },
     ],
-    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }], //reference: a relation between two different places
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+    //reference: a relation between two different places
   },
   {
     toJSON: { virtuals: true },
