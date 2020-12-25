@@ -146,24 +146,71 @@ body {
   text-transform: uppercase;
   font-weight: 300;
 }
+
+.heading-primary {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  background-color: #556;
+  background-image: linear-gradient(
+      30deg,
+      #445 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #445 87.5%,
+      #445
+    ),
+    linear-gradient(
+      150deg,
+      #445 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #445 87.5%,
+      #445
+    ),
+    linear-gradient(
+      30deg,
+      #445 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #445 87.5%,
+      #445
+    ),
+    linear-gradient(
+      150deg,
+      #445 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #445 87.5%,
+      #445
+    ),
+    linear-gradient(
+      60deg,
+      #99a 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #99a 75%,
+      #99a
+    ),
+    linear-gradient(
+      60deg,
+      #99a 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #99a 75%,
+      #99a
+    );
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  font-weight: 700;
+}
 .heading-primary span,
 .heading-tertirary span {
   padding: 1rem 1.5rem;
   line-height: 1;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    right bottom,
-    from(rgba(125, 213, 111, 0.85)),
-    to(rgba(40, 180, 135, 0.85))
-  );
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(125, 213, 111, 0.85),
-    rgba(40, 180, 135, 0.85)
-  );
 }
 
 .heading-primary {
@@ -181,6 +228,24 @@ body {
   right: 2rem;
   width: 70%;
   z-index: 10;
+  background-image: url('https://2.bp.blogspot.com/-pKFE-5ysj68/TkjG9DvLB4I/AAAAAAAAEoM/rDKiHkvbC8o/s1600/Abstract_Wallpaper_8.jpg');
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right bottom,
+    from(rgba(125, 213, 111, 0.85)),
+    to(rgba(40, 180, 135, 0.85))
+  );
+  background: linear-gradient(
+    90deg,
+    rgba(227, 223, 71, 1) 0%,
+    rgba(255, 146, 87, 1) 32%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
 }
 
 .btn,
@@ -375,8 +440,8 @@ body {
     from(#7dd56f),
     to(#28b487)
   );
-  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
-  opacity: 0.85;
+  background-image: linear-gradient(to right bottom, #d4eed0, #abc9bf);
+  opacity: 0.25;
 }
 
 .heading-box {
@@ -607,8 +672,8 @@ body {
   overflow-x: scroll;
   -ms-scroll-snap-type: x mandatory;
   scroll-snap-type: x mandatory;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .reviews__card {
   width: 30rem;
@@ -1119,6 +1184,8 @@ body {
   );
   background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
   opacity: 0.7;
+  background-image: linear-gradient(to right bottom, #d4eed0, #abc9bf);
+  opacity: 0.25;
 }
 .card__picture-img {
   -o-object-fit: cover;
