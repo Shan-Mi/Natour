@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 // express is a function and with that function calling, app has buntch of methods calling.
 const morgan = require('morgan');
@@ -15,7 +16,13 @@ const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+// path, native built-in module, __dirname is the root level
+
 // 1) global middlewares
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
 // 'tiny' is another params in morgan
 // console.log(process.env.NODE_ENV);
 
@@ -61,13 +68,14 @@ app.use(
   })
 );
 
-// Serving static files
-app.use(express.static(`${__dirname}/public`));
-
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
+});
+
+app.get('/', (req, res) => {
+  res.status(200).render('base');
 });
 
 // mount routers
