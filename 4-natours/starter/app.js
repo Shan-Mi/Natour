@@ -30,6 +30,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set security HTTP headers
 app.use(helmet()); // use helmet early, in the beginning
 
+// some code from https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065656#questions/12370058
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+//       baseUri: ["'self'"],
+//       fontSrc: ["'self'", 'https:', 'http:', 'data:'],
+//       scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
+//       styleSrc: ["'self'", 'https:', 'http:', 'unsafe-inline'],
+//     },
+//   })
+// );
+
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
