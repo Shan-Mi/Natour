@@ -14,6 +14,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   next();
 });
 
+// async function always needs next
 exports.getTour = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const tour = await Tour.findOne({ slug }).populate({
@@ -33,3 +34,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
     });
   next();
 });
+
+exports.getLoginForm = (req, res) => {
+  res.status(200).render('login', {
+    title: 'Log into your account',
+  });
+};
