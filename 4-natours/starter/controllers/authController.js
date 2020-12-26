@@ -220,3 +220,28 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // 4) Log user in, send JWT
   createSendToken(user, 200, res);
 });
+
+// only for conditional rendering, no errors
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  let token;
+  if (req.cookies.jwt) {
+    // 1 verify token
+    token = req.cookies.jwt;
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+    // 2) Check if user still exists
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next();
+    }
+    // 3) Check if user changed password after the token was issued
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+    // There is a logged in user
+    // pug will get access to this user
+    res.locals.user = currentUser;
+    return next();
+  }
+  next();
+});
