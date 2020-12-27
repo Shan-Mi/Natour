@@ -7,10 +7,16 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   // 2) Build template
 
   // 3) Render that template, using tour data from 1
-  res.status(200).render('overview', {
-    title: 'All Tours',
-    tours,
-  });
+  res
+    .status(200)
+    .set(
+      'Content-Security-Policy',
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+    )
+    .render('overview', {
+      title: 'All Tours',
+      tours,
+    });
   next();
 });
 
@@ -40,7 +46,7 @@ exports.getLoginForm = (req, res) => {
     .status(200)
     .set(
       'Content-Security-Policy',
-      "script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'"
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' "
     )
     .render('login', {
       title: 'Log into your account',

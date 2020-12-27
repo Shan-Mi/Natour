@@ -8,10 +8,8 @@ const {
 } = require('../controllers/viewsController');
 const { isLoggedIn } = require('../controllers/authController');
 
-router.use(isLoggedIn); // each route will use this isLoggedIn middleware
-// render frontend page
-router.get('/', getOverview);
-router.get('/tour/:slug', getTour);
-router.get('/login', getLoginForm);
+router.get('/', isLoggedIn, getOverview);
+router.get('/tour/:slug', isLoggedIn, getTour);
+router.get('/login', isLoggedIn, getLoginForm);
 
 module.exports = router;
