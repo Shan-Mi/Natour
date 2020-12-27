@@ -8586,27 +8586,26 @@ var logout = /*#__PURE__*/function () {
 
           case 3:
             res = _context2.sent;
-            console.log(res);
 
+            // console.log(res);
             if (res.data.status === 'success') {
               location.reload();
             }
 
-            _context2.next = 12;
+            _context2.next = 10;
             break;
 
-          case 8:
-            _context2.prev = 8;
+          case 7:
+            _context2.prev = 7;
             _context2.t0 = _context2["catch"](0);
-            (0, _alerts.showAlert)('error', 'Error logging out! Try again!');
-            console.log(_context2.t0);
+            (0, _alerts.showAlert)('error', 'Error logging out! Try again!'); // console.log(err);
 
-          case 12:
+          case 10:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 8]]);
+    }, _callee2, null, [[0, 7]]);
   }));
 
   return function logout() {
@@ -8890,8 +8889,8 @@ var loginForm = document.querySelector('.form');
 var logoutBtn = document.querySelector('.nav__el--logout'); // delegation
 
 if (mapBox) {
-  var locations = JSON.parse(mapBox.dataset.locations);
-  console.log(locations);
+  var locations = JSON.parse(mapBox.dataset.locations); // console.log(locations);
+
   (0, _mapbox.displayMap)(locations);
 }
 

@@ -24,7 +24,7 @@ const createSendToken = (user, statusCode, res) => {
   };
 
   if (process.env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1); // trust first proxy
+    // app.set('trust proxy', 1); // trust first proxy
     cookieOptions.secure = true;
   }
 
@@ -73,7 +73,6 @@ exports.login = async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Increct email or password', 401));
   }
-  // console.log(user);
 
   // 3) If everything is ok, send the json web token to the client
   createSendToken(user, 200, res);
@@ -81,12 +80,22 @@ exports.login = async (req, res, next) => {
 
 // Set-Cookie: flavor=choco; SameSite=None; Secure
 exports.logout = (req, res) => {
+  // if (navigator.userAgent.indexOf('Firefox') !== -1) {
+  //   res.cookie('jwt', 'loggedout', {
+  //     expires: new Date(Date.now() + 10 * 1000),
+  //     httpOnly: true,
+  //     sameSite: 'strict',
+  //     // secure: true,
+  //   });
+  //   console.log('firefox is here');
+  // } else {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
-    sameSite: 'strict',
-    secure: true,
+    // sameSite: 'strict',
+    // secure: true,
   });
+  // }
   res.status(200).json({ status: 'success' });
 };
 
@@ -126,6 +135,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   // Grant access to protected route
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 

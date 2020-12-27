@@ -32,12 +32,12 @@ export const logout = async () => {
       url: `${rootURL}/api/v1/users/logout`,
     });
 
-    console.log(res);
+    // console.log(res);
     if (res.data.status === 'success') {
       location.reload();
     }
   } catch (err) {
     showAlert('error', 'Error logging out! Try again!');
-    console.log(err);
+    // console.log(err);
   }
 };

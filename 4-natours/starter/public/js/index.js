@@ -10,7 +10,7 @@ const logoutBtn = document.querySelector('.nav__el--logout');
 // delegation
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
-  console.log(locations);
+  // console.log(locations);
   displayMap(locations);
 }
 
