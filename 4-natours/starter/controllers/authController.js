@@ -32,7 +32,7 @@ const createSendToken = (user, statusCode, res) => {
 
   // remove psw from output
   user.password = undefined;
-  console.log(user);
+  // console.log(user);
 
   res.status(statusCode).json({
     status: 'success',
@@ -269,7 +269,7 @@ exports.isLoggedIn = async (req, res, next) => {
       // There is a logged in user
       // pug will get access to this user
       res.locals.user = currentUser;
-      console.log(res.locals);
+      // console.log(res.locals);
       return next();
     } catch (err) {
       return next();
