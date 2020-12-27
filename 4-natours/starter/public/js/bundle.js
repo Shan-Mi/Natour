@@ -8589,7 +8589,7 @@ var logout = /*#__PURE__*/function () {
 
             // console.log(res);
             if (res.data.status === 'success') {
-              location.reload();
+              location.reload(); // location.assign('/');
             }
 
             _context2.next = 10;
@@ -8885,7 +8885,7 @@ var _login = require("./login");
 
 // DOM elements
 var mapBox = document.querySelector('#map');
-var loginForm = document.querySelector('.form');
+var loginForm = document.querySelector('#user-login-form');
 var logoutBtn = document.querySelector('.nav__el--logout'); // delegation
 
 if (mapBox) {

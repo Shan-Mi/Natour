@@ -63,6 +63,7 @@ app.use('/api', limiter); // specify this route
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); // if body is bigger than 10kb, will not be accepted
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser()); // parser from the cookie
 
 // Data sanitization against noSQL query injection (mongodb query)
