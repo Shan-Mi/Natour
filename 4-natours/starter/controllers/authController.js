@@ -19,9 +19,12 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true, // prevent cors attack
+    sameSite: 'strict',
+    // Secure,
   };
 
   if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1); // trust first proxy
     cookieOptions.secure = true;
   }
 
@@ -55,7 +58,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 201, res);
 });
 
-exports.login = catchAsync(async (req, res, next) => {
+exports.login = async (req, res, next) => {
   const { email, password } = req.body;
   // 1) check if email and password exist
   if (!email || !password) {
@@ -74,7 +77,18 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 3) If everything is ok, send the json web token to the client
   createSendToken(user, 200, res);
-});
+};
+
+// Set-Cookie: flavor=choco; SameSite=None; Secure
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token, and check if it's there
@@ -222,26 +236,34 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 // only for conditional rendering, no errors
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
   let token;
   if (req.cookies.jwt) {
-    // 1 verify token
-    token = req.cookies.jwt;
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    try {
+      // 1 verify token
+      token = req.cookies.jwt;
+      const decoded = await promisify(jwt.verify)(
+        token,
+        process.env.JWT_SECRET
+      );
 
-    // 2) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
+      // 2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+      // There is a logged in user
+      // pug will get access to this user
+      res.locals.user = currentUser;
+      console.log(res.locals);
+      return next();
+    } catch (err) {
       return next();
     }
-    // 3) Check if user changed password after the token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-      return next();
-    }
-    // There is a logged in user
-    // pug will get access to this user
-    res.locals.user = currentUser;
-    return next();
   }
   next();
-});
+};
