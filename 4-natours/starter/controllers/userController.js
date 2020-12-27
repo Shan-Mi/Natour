@@ -32,7 +32,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email'); // implement image later
+  const filteredBody = filterObj(req.body, 'name', 'email');
+  // implement image later
 
   // 3) Update user document
   // cuz not handle sensitive data(password), so we can use findByIdAndUpdate now.
