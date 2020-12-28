@@ -50,6 +50,7 @@ if (userDataForm) {
     await updateSettings(form, 'data');
     document.querySelector('#name').value = name;
     document.querySelector('#email').value = email;
+
     setTimeout(() => {
       location.reload();
     }, 500);
