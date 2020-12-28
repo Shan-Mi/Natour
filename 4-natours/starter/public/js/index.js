@@ -9,6 +9,7 @@ const loginForm = document.querySelector('#user-login-form');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userSettingForm = document.querySelector('.form-user-settings');
+// const userPhoto = document.que
 
 // delegation
 if (mapBox) {
@@ -35,11 +36,23 @@ if (logoutBtn) {
 if (userDataForm) {
   userDataForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const form = new FormData();
+    // The FormData() constructor creates a new FormData object.
     const name = document.querySelector('#name').value.trim();
     const email = document.querySelector('#email').value.trim();
-    await updateSettings({ name, email }, 'data');
+    const [photo] = document.querySelector('#photo').files;
+    // files is an array, and we want the first one
+
+    form.append('name', name);
+    form.append('email', email);
+    form.append('photo', photo);
+
+    await updateSettings(form, 'data');
     document.querySelector('#name').value = name;
     document.querySelector('#email').value = email;
+    setTimeout(() => {
+      location.reload();
+    }, 500);
   });
 }
 

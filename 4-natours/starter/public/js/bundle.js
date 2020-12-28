@@ -8652,27 +8652,27 @@ var updateSettings = /*#__PURE__*/function () {
 
           case 4:
             res = _context.sent;
-            console.log(res);
 
+            // console.log(res);
             if (res.data.status === 'success') {
-              console.log('result:', res);
+              // console.log('result:', res);
               (0, _alerts.showAlert)('success', "".concat(type.toUpperCase(), " updated successfully."));
             }
 
-            _context.next = 12;
+            _context.next = 11;
             break;
 
-          case 9:
-            _context.prev = 9;
+          case 8:
+            _context.prev = 8;
             _context.t0 = _context["catch"](0);
             (0, _alerts.showAlert)('error', _context.t0.response.data.message);
 
-          case 12:
+          case 11:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 9]]);
+    }, _callee, null, [[0, 8]]);
   }));
 
   return function updateSettings(_x, _x2) {
@@ -8952,6 +8952,18 @@ var _login = require("./login");
 
 var _updateSettings = require("./updateSettings");
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -8961,7 +8973,8 @@ var mapBox = document.querySelector('#map');
 var loginForm = document.querySelector('#user-login-form');
 var logoutBtn = document.querySelector('.nav__el--logout');
 var userDataForm = document.querySelector('.form-user-data');
-var userSettingForm = document.querySelector('.form-user-settings'); // delegation
+var userSettingForm = document.querySelector('.form-user-settings'); // const userPhoto = document.que
+// delegation
 
 if (mapBox) {
   var locations = JSON.parse(mapBox.dataset.locations); // console.log(locations);
@@ -8987,25 +9000,33 @@ if (logoutBtn) {
 if (userDataForm) {
   userDataForm.addEventListener('submit', /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var name, email;
+      var form, name, email, _document$querySelect, photo;
+
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               e.preventDefault();
+              form = new FormData(); // The FormData() constructor creates a new FormData object.
+
               name = document.querySelector('#name').value.trim();
               email = document.querySelector('#email').value.trim();
-              _context.next = 5;
-              return (0, _updateSettings.updateSettings)({
-                name: name,
-                email: email
-              }, 'data');
+              _document$querySelect = _slicedToArray(document.querySelector('#photo').files, 1), photo = _document$querySelect[0]; // files is an array, and we want the first one
 
-            case 5:
+              form.append('name', name);
+              form.append('email', email);
+              form.append('photo', photo);
+              _context.next = 10;
+              return (0, _updateSettings.updateSettings)(form, 'data');
+
+            case 10:
               document.querySelector('#name').value = name;
               document.querySelector('#email').value = email;
+              setTimeout(function () {
+                location.reload();
+              }, 500);
 
-            case 7:
+            case 13:
             case "end":
               return _context.stop();
           }
