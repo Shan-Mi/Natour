@@ -9,6 +9,7 @@ const {
   deleteMe,
   getMe,
   uploadUserPhoto,
+  resizeUserPhoto,
 } = require('../controllers/userController');
 
 const {
@@ -38,7 +39,7 @@ router.patch('/updateMyPassword', updatePassword);
 
 // by getMe, we get current user's id, then pass it to req.params.id, then reuse getUser
 router.get('/me', getMe, getUser);
-router.patch('/updateMe', uploadUserPhoto, updateMe);
+router.patch('/updateMe', uploadUserPhoto, resizeUserPhoto, updateMe);
 router.patch('/deleteMe', deleteMe);
 
 // can only run by admin user

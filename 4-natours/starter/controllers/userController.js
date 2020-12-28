@@ -3,16 +3,10 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 const multer = require('multer');
+const sharp = require('sharp'); // resizing image in an eazy way
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/users');
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  },
-});
+// store image as a buffer
+const multerStorage = multer.memoryStorage();
 
 // multer filter, check if it is an image
 const multerFilter = (req, file, cb) => {
@@ -26,6 +20,21 @@ const multerFilter = (req, file, cb) => {
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 // use multer to create a middleware, field name is 'photo'
 exports.uploadUserPhoto = upload.single('photo');
+
+exports.resizeUserPhoto = (req, res, next) => {
+  if (!req.file) {
+    return next();
+  }
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  // keep img in memory
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`);
+
+  next();
+};
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
