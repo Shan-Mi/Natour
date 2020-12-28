@@ -32,7 +32,7 @@ export const logout = async () => {
       url: `${rootURL}/api/v1/users/logout`,
     });
 
-    // console.log(res);
+    console.log(res);
     if (res.data.status === 'success') {
       location.reload();
       // location.assign('/');
