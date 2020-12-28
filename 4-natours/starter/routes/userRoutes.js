@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const {
   getAllUsers,
   getUser,
@@ -21,6 +22,8 @@ const {
   restrictTo,
 } = require('../controllers/authController');
 
+const upload = multer({ dest: 'public/img/users' }); // use multer to create a middleware, field name is 'photo'
+
 const router = express.Router();
 
 router.post('/signup', signup);
@@ -37,7 +40,7 @@ router.patch('/updateMyPassword', updatePassword);
 
 // by getMe, we get current user's id, then pass it to req.params.id, then reuse getUser
 router.get('/me', getMe, getUser);
-router.patch('/updateMe', updateMe);
+router.patch('/updateMe', upload.single('photo'), updateMe);
 router.patch('/deleteMe', deleteMe);
 
 // can only run by admin user
