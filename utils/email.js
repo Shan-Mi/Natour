@@ -1,19 +1,19 @@
-const nodemailer = require('nodemailer');
-const pug = require('pug');
-const htmlToText = require('html-to-text');
+const nodemailer = require("nodemailer");
+const pug = require("pug");
+const { htmlToText } = require("html-to-text");
 
 // new Email(user, url).sendWelcome() .sendReset
 module.exports = class Email {
   constructor(user, url) {
     this.to = user.email;
-    this.firstName = user.name.split(' ')[0];
+    this.firstName = user.name.split(" ")[0];
     this.url = url;
     this.from = `Shan Mi <${process.env.EMAIL_FROM}>`;
   }
 
   newTransport() {
     // 1) prod
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       // sendgrid
       return;
     }
@@ -57,6 +57,6 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'Welcome to the Natours Family!');
+    await this.send("welcome", "Welcome to the Natours Family!");
   }
 };
