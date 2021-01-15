@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 const {
@@ -7,13 +7,17 @@ const {
   getLoginForm,
   getAccount,
   updateUserData,
-} = require('../controllers/viewsController');
-const { isLoggedIn, protect } = require('../controllers/authController');
+  getMytours,
+} = require("../controllers/viewsController");
+const { isLoggedIn, protect } = require("../controllers/authController");
+const { createBookingCheckout } = require("../controllers/bookingController");
 
-router.get('/', isLoggedIn, getOverview);
-router.get('/tour/:slug', isLoggedIn, getTour);
-router.get('/login', isLoggedIn, getLoginForm);
-router.get('/me', protect, getAccount);
-router.post('/submit-user-data', protect, updateUserData);
+router.get("/", createBookingCheckout, isLoggedIn, getOverview);
+router.get("/tour/:slug", isLoggedIn, getTour);
+router.get("/login", isLoggedIn, getLoginForm);
+router.get("/me", protect, getAccount);
+router.get("/my-tours", protect, getMytours);
+
+router.post("/submit-user-data", protect, updateUserData);
 
 module.exports = router;
