@@ -12,14 +12,15 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true, // prevent cors attack
-    sameSite: "strict",
+    // sameSite: "strict",
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
     // Secure,
   };
 
@@ -43,6 +44,29 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+// const createSendToken = (user, statusCode, req, res) => {
+//   const token = signToken(user._id);
+
+//   res.cookie('jwt', token, {
+//     expires: new Date(
+//       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+//     ),
+//     httpOnly: true,
+//     secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+//   });
+
+//   // Remove password from output
+//   user.password = undefined;
+
+//   res.status(statusCode).json({
+//     status: 'success',
+//     token,
+//     data: {
+//       user
+//     }
+//   });
+// };
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -59,10 +83,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   // console.log(url);
   await new Email(newUser, url).sendWelcome();
   // now we cannot register as an admin
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201, req, res);
 });
 
-exports.login = async (req, res, next) => {
+exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   // 1) check if email and password exist
   if (!email || !password) {
@@ -79,8 +103,8 @@ exports.login = async (req, res, next) => {
   }
 
   // 3) If everything is ok, send the json web token to the client
-  createSendToken(user, 200, res);
-};
+  createSendToken(user, 200, req, res);
+});
 
 // Set-Cookie: flavor=choco; SameSite=None; Secure
 exports.logout = (req, res) => {
@@ -157,9 +181,9 @@ exports.restrictTo = (...roles) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email
-  console.log(
-    `${req.protocol}://${req.get("host")}/api/v1/users/resetPassword/`
-  );
+  // console.log(
+  //   `${req.protocol}://${req.get("host")}/api/v1/users/resetPassword/`
+  // );
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return next(new AppError("There is no user with that email address.", 404));
@@ -222,7 +246,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3) Update changedPasswordAt property for the user
 
   // 4) Log the user in, send JWT to the client
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -234,12 +258,13 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   }
   // 3) if so, update password
   user.password = req.body.password;
-  user.passwordCurrent = req.body.passwordCurrent;
+  user.passwordConfirm = req.body.passwordConfirm;
+  // user.passwordCurrent = req.body.passwordCurrent;
   await user.save();
   // User.findByIdAndUpdate
 
   // 4) Log user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // only for conditional rendering, no errors
