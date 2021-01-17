@@ -8489,8 +8489,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var rootURL = 'http://localhost:8000';
-
 var login = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
     var res;
@@ -8498,44 +8496,41 @@ var login = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log(email, password);
-            _context.prev = 1;
-            _context.next = 4;
+            _context.prev = 0;
+            _context.next = 3;
             return (0, _axios.default)({
-              method: 'POST',
-              url: "".concat(rootURL, "/api/v1/users/login"),
+              method: "POST",
+              url: "/api/v1/users/login",
               data: {
                 email: email,
                 password: password
               }
             });
 
-          case 4:
+          case 3:
             res = _context.sent;
 
-            if (res.data.status === 'success') {
-              // console.log(res);
-              (0, _alerts.showAlert)('success', 'Logged in successfully.');
+            if (res.data.status === "success") {
+              (0, _alerts.showAlert)("success", "Logged in successfully.");
               window.setTimeout(function () {
-                location.assign('/');
+                location.assign("/");
               }, 500);
             }
 
-            _context.next = 11;
+            _context.next = 10;
             break;
 
-          case 8:
-            _context.prev = 8;
-            _context.t0 = _context["catch"](1);
-            // console.log(err.response);
-            (0, _alerts.showAlert)('error', _context.t0.response.data.message);
+          case 7:
+            _context.prev = 7;
+            _context.t0 = _context["catch"](0);
+            (0, _alerts.showAlert)("error", _context.t0.response.data.message);
 
-          case 11:
+          case 10:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 8]]);
+    }, _callee, null, [[0, 7]]);
   }));
 
   return function login(_x, _x2) {
@@ -8555,32 +8550,31 @@ var logout = /*#__PURE__*/function () {
             _context2.prev = 0;
             _context2.next = 3;
             return (0, _axios.default)({
-              method: 'GET',
-              url: "".concat(rootURL, "/api/v1/users/logout")
+              method: "GET",
+              url: "/api/v1/users/logout"
             });
 
           case 3:
             res = _context2.sent;
-            console.log(res);
 
-            if (res.data.status === 'success') {
-              location.reload(); // location.assign('/');
+            if (res.data.status === "success") {
+              location.reload();
             }
 
-            _context2.next = 11;
+            _context2.next = 10;
             break;
 
-          case 8:
-            _context2.prev = 8;
+          case 7:
+            _context2.prev = 7;
             _context2.t0 = _context2["catch"](0);
-            (0, _alerts.showAlert)('error', 'Error logging out! Try again!'); // console.log(err);
+            (0, _alerts.showAlert)("error", "Error logging out! Try again!");
 
-          case 11:
+          case 10:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 8]]);
+    }, _callee2, null, [[0, 7]]);
   }));
 
   return function logout() {
@@ -8607,8 +8601,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var rootURL = 'http://localhost:8000'; // type is either psw or data
-
+// type is either psw or data
 var updateSettings = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data, type) {
     var url, res;
@@ -8617,10 +8610,10 @@ var updateSettings = /*#__PURE__*/function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            url = type === 'password' ? "".concat(rootURL, "/api/v1/users/updateMyPassword") : "".concat(rootURL, "/api/v1/users/updateMe");
+            url = type === "password" ? "/api/v1/users/updateMyPassword" : "/api/v1/users/updateMe";
             _context.next = 4;
             return (0, _axios.default)({
-              method: 'PATCH',
+              method: "PATCH",
               url: url,
               data: data
             });
@@ -8628,10 +8621,8 @@ var updateSettings = /*#__PURE__*/function () {
           case 4:
             res = _context.sent;
 
-            // console.log(res);
-            if (res.data.status === 'success') {
-              // console.log('result:', res);
-              (0, _alerts.showAlert)('success', "".concat(type.toUpperCase(), " updated successfully."));
+            if (res.data.status === "success") {
+              (0, _alerts.showAlert)("success", "".concat(type.toUpperCase(), " updated successfully."));
             }
 
             _context.next = 11;
@@ -8640,7 +8631,7 @@ var updateSettings = /*#__PURE__*/function () {
           case 8:
             _context.prev = 8;
             _context.t0 = _context["catch"](0);
-            (0, _alerts.showAlert)('error', _context.t0.response.data.message);
+            (0, _alerts.showAlert)("error", _context.t0.response.data.message);
 
           case 11:
           case "end":
@@ -8676,7 +8667,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 // const Stripe = require("stripe");
 var stripe = Stripe("pk_test_51I9dJhAJ3ueSRZl46pODU6F8qZmKuNku3TbljUrm5MK7cewQ9QC7vefd8wUKLe5UN7MCIZbq6C6DOSzF0mUJgbVt00uJ0AVPN6");
-var rootURL = "http://localhost:8000";
 
 var bookTour = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(tourId) {
@@ -8691,27 +8681,26 @@ var bookTour = /*#__PURE__*/function () {
 
           case 3:
             session = _context.sent;
-            console.log(stripe);
-            _context.next = 7;
+            _context.next = 6;
             return stripe.redirectToCheckout({
               sessionId: session.data.session.id
             });
 
-          case 7:
-            _context.next = 12;
+          case 6:
+            _context.next = 11;
             break;
 
-          case 9:
-            _context.prev = 9;
+          case 8:
+            _context.prev = 8;
             _context.t0 = _context["catch"](0);
             (0, _alerts.showAlert)("error", _context.t0);
 
-          case 12:
+          case 11:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 9]]);
+    }, _callee, null, [[0, 8]]);
   }));
 
   return function bookTour(_x) {
@@ -9013,8 +9002,7 @@ var bookBtn = document.querySelector("#book-tour"); // const userPhoto = documen
 // delegation
 
 if (mapBox) {
-  var locations = JSON.parse(mapBox.dataset.locations); // console.log(locations);
-
+  var locations = JSON.parse(mapBox.dataset.locations);
   (0, _mapbox.displayMap)(locations);
 }
 

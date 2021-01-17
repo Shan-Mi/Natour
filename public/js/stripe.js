@@ -4,7 +4,6 @@ const stripe = Stripe(
 );
 import { showAlert } from "./alerts";
 import axios from "axios";
-const rootURL = "http://localhost:8000";
 
 export const bookTour = async (tourId) => {
   try {
@@ -12,7 +11,6 @@ export const bookTour = async (tourId) => {
     const session = await axios.post(
       `/api/v1/bookings/checkout-session/${tourId}`
     );
-    console.log(stripe);
     await stripe.redirectToCheckout({ sessionId: session.data.session.id });
 
     // 2) Create checkout form + charge credit card
