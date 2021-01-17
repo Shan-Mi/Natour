@@ -192,11 +192,11 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-tourSchema.post(/^find/, function (docs, next) {
-  // console.log(`Query took ${Date.now() - this.start} milliseconds.`);
-  // console.log(docs);
-  next();
-});
+// tourSchema.post(/^find/, function (docs, next) {
+//   // console.log(`Query took ${Date.now() - this.start} milliseconds.`);
+//   // console.log(docs);
+//   next();
+// });
 
 // AGGREGATION MIDDLEWARE
 // we can check if geoNear is the first, if not we don't do this step.

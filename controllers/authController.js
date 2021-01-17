@@ -78,7 +78,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordResetToken: req.body.passwordResetToken,
     passwordResetExpires: req.body.passwordResetExpires,
   });
-  // const url = "http://localhost:8000/me";
+
   const url = `${req.protocol}://${req.get("host")}/me`;
   // console.log(url);
   await new Email(newUser, url).sendWelcome();

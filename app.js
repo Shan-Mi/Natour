@@ -8,6 +8,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
 const cors = require("cors");
 
 const AppError = require("./utils/appError");
@@ -87,6 +88,10 @@ app.use(
     ],
   })
 );
+
+// return a middleware function that compress all the text that is sent to clients
+// not going to be working for images, cuz they are already compressed
+app.use(compression());
 
 // Test middleware
 app.use((req, res, next) => {
