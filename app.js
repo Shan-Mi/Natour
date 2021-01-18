@@ -8,10 +8,14 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
+const bodyParser = require('body-parser');
+const compression = require('compression');
 const cors = require("cors");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
+const { webhookCheckout } = require("./controllers/bookingController");
+
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
@@ -19,12 +23,14 @@ const bookingRouter = require("./routes/bookingRoutes");
 const viewRouter = require("./routes/viewRoutes");
 
 const app = express();
-app.use(cors());
+app.enable("trust proxy");
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 // path, native built-in module, __dirname is the root level
 
+app.use(cors());
+app.options("*", cors());
 // 1) global middlewares
 // Serving static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -32,7 +38,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // console.log(process.env.NODE_ENV);
 
 // Set security HTTP headers
-app.use(helmet()); // use helmet early, in the beginning
+app.use(helmet({ contentSecurityPolicy: false })); // use helmet early, in the beginning
 
 // some code from https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065656#questions/12370058
 // app.use(
@@ -62,6 +68,13 @@ const limiter = rateLimit({
 app.use("/api", limiter); // specify this route
 // if we save here, we will reset limit
 
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+app.post(
+  "/webhook-checkout",
+  bodyParser.raw({ type: "application/json" }),
+  webhookCheckout
+);
+
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" })); // if body is bigger than 10kb, will not be accepted
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -88,12 +101,14 @@ app.use(
   })
 );
 
+app.use(compression());
+
 // Test middleware
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  // console.log('cookies', req.cookies);
-  next();
-});
+// app.use((req, res, next) => {
+//   req.requestTime = new Date().toISOString();
+//   // console.log('cookies', req.cookies);
+//   next();
+// });
 
 // mount routers
 app.use("/", viewRouter);

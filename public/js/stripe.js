@@ -1,4 +1,5 @@
 // const Stripe = require("stripe");
+
 const stripe = Stripe(
   "pk_test_51I9dJhAJ3ueSRZl46pODU6F8qZmKuNku3TbljUrm5MK7cewQ9QC7vefd8wUKLe5UN7MCIZbq6C6DOSzF0mUJgbVt00uJ0AVPN6"
 );
