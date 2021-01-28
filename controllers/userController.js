@@ -1,25 +1,25 @@
-const AppError = require('../utils/appError');
-const User = require('../models/userModel');
-const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerFactory');
-const multer = require('multer');
-const sharp = require('sharp'); // resizing image in an eazy way
+const multer = require("multer");
+const sharp = require("sharp"); // resizing image in an eazy way
+const AppError = require("../utils/appError");
+const User = require("../models/userModel");
+const catchAsync = require("../utils/catchAsync");
+const factory = require("./handlerFactory");
 
 // store image as a buffer
 const multerStorage = multer.memoryStorage();
 
 // multer filter, check if it is an image
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
+  if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
-    cb(new AppError('Not an image! Please upload only images.', 400), false);
+    cb(new AppError("Not an image! Please upload only images.", 400), false);
   }
 };
 
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 // use multer to create a middleware, field name is 'photo'
-exports.uploadUserPhoto = upload.single('photo');
+exports.uploadUserPhoto = upload.single("photo");
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) {
@@ -29,7 +29,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   // keep img in memory
   await sharp(req.file.buffer)
     .resize(500, 500)
-    .toFormat('jpeg')
+    .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(`public/img/users/${req.file.filename}`);
 
@@ -59,14 +59,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
       new AppError(
-        'This route is not for password update, please use /updateMyPassword',
+        "This route is not for password update, please use /updateMyPassword",
         400
       )
     );
   }
 
   // 2) filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, "name", "email");
   if (req.file) {
     filteredBody.photo = req.file.filename;
   }
@@ -81,7 +81,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       user: updatedUser,
     },
@@ -91,15 +91,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.deleteMe = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user.id, { active: false });
   res.status(204).json({
-    status: 'success',
+    status: "success",
     data: null,
   });
 });
 
 exports.createUser = (req, res) => {
   res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined! Please use /signup instead.',
+    status: "error",
+    message: "This route is not yet defined! Please use /signup instead.",
   });
 };
 

@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
-dotenv.config({ path: './config.env' }); // this config has to become before require app
-process.on('uncaughtException', (err) => {
-  console.log('UNCAUGHT REJECTION!!! 👺 shutting down.');
+dotenv.config({ path: "./config.env" }); // this config has to become before require app
+process.on("uncaughtException", (err) => {
+  console.log("UNCAUGHT REJECTION!!! 👺 shutting down.");
   console.log(err.name, err.message);
   process.exit(1);
 });
 
-const app = require('./app');
+const app = require("./app");
 
 const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
+  "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
 
@@ -26,7 +26,7 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('DB connection successful🥰'));
+  .then(() => console.log("DB connection successful🥰"));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
@@ -34,7 +34,7 @@ const server = app.listen(port, () => {
 });
 
 // database configuration, error handling, etc. env viriables
-process.on('unhandledRejection', (err) => {
+process.on("unhandledRejection", (err) => {
   server.close(() => {
     process.exit(1);
   });

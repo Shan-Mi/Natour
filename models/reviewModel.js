@@ -1,11 +1,11 @@
 // review / rating / createdAt / ref to tour / ref to user
-const mongoose = require('mongoose');
-const Tour = require('./tourModel');
+const mongoose = require("mongoose");
+const Tour = require("./tourModel");
 // const { findByIdAndDelete, findByIdAndUpdate } = require('./userModel');
 
 const reviewSchema = new mongoose.Schema(
   {
-    review: { type: String, required: [true, 'Review cannot be empty'] },
+    review: { type: String, required: [true, "Review cannot be empty"] },
     rating: {
       type: Number,
       min: 1,
@@ -14,13 +14,13 @@ const reviewSchema = new mongoose.Schema(
     createdAt: { type: Date, default: Date.now },
     tour: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Tour',
-      required: [true, 'Review must belong to a tour'],
+      ref: "Tour",
+      required: [true, "Review must belong to a tour"],
     },
     user: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
-      required: [true, 'Review must belong to a user.'],
+      ref: "User",
+      required: [true, "Review must belong to a user."],
     },
   },
   {
@@ -38,8 +38,8 @@ reviewSchema.pre(/^find/, function (next) {
   //   select: 'name photo',
   // });
   this.populate({
-    path: 'user',
-    select: 'name photo',
+    path: "user",
+    select: "name photo",
   });
   next();
 });
@@ -55,9 +55,9 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     },
     {
       $group: {
-        _id: '$tour', // group by tour
+        _id: "$tour", // group by tour
         nRating: { $sum: 1 }, // add amount, begin by 1
-        avgRating: { $avg: '$rating' }, //each field has a rating
+        avgRating: { $avg: "$rating" }, //each field has a rating
       },
     },
   ]);
@@ -79,7 +79,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
 // pre save, it will not be in the collection yet
 // post, all documents are stored
 // save cannnot access to next
-reviewSchema.post('save', function () {
+reviewSchema.post("save", function () {
   // this points to current review
   // constructor is the model which create this document
   this.constructor.calcAverageRatings(this.tour);
@@ -91,7 +91,7 @@ reviewSchema.post(/^findOneAnd/, async function (docs) {
   }
 });
 
-const Review = mongoose.model('Review', reviewSchema);
+const Review = mongoose.model("Review", reviewSchema);
 
 module.exports = Review;
 

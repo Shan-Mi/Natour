@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const slugify = require('slugify');
+const mongoose = require("mongoose");
+const slugify = require("slugify");
 // const validator = require('validator');
 // const User = require('./userModel');
 
@@ -7,16 +7,16 @@ const tourSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'A tour must have a name'], // a validator
+      required: [true, "A tour must have a name"], // a validator
       unique: true,
       trim: true,
       maxlength: [
         40,
-        'A tour name must have less than or equal to 40 characters.',
+        "A tour name must have less than or equal to 40 characters.",
       ],
       minlength: [
         10,
-        'A tour name must have more than or equal to 10 characters.',
+        "A tour name must have more than or equal to 10 characters.",
       ],
     }, //schema type options, can be different type
     slug: {
@@ -24,25 +24,25 @@ const tourSchema = new mongoose.Schema(
     },
     duration: {
       type: Number,
-      required: [true, 'A tour must have a duration'],
+      required: [true, "A tour must have a duration"],
     },
     maxGroupSize: {
       type: Number,
-      required: [true, 'A tour must have a group size'],
+      required: [true, "A tour must have a group size"],
     },
     difficulty: {
       type: String,
-      required: [true, 'A tour must have a difficulty'],
+      required: [true, "A tour must have a difficulty"],
       enum: {
-        values: ['easy', 'medium', 'difficult'],
-        message: 'Difficulty is either: easy, medium or difficult',
+        values: ["easy", "medium", "difficult"],
+        message: "Difficulty is either: easy, medium or difficult",
       },
     },
     ratingsAverage: {
       type: Number,
       default: 4.5,
-      min: [1, 'Rating must be above 1.0'],
-      max: [5, 'Rating must be below 5.0'],
+      min: [1, "Rating must be above 1.0"],
+      max: [5, "Rating must be below 5.0"],
       set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
@@ -55,7 +55,7 @@ const tourSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required: [true, 'A tour must have a price'],
+      required: [true, "A tour must have a price"],
     },
     priceDiscount: {
       type: Number,
@@ -64,7 +64,7 @@ const tourSchema = new mongoose.Schema(
           return val < this.price;
           // this only points to current doc on new document creation
         },
-        message: 'Discount price ({VALUE}) should be below the regular price.',
+        message: "Discount price ({VALUE}) should be below the regular price.",
       },
     },
     summary: {
@@ -74,11 +74,11 @@ const tourSchema = new mongoose.Schema(
     description: {
       type: String,
       trim: true,
-      required: [true, 'A tour must have a description.'],
+      required: [true, "A tour must have a description."],
     },
     imageCover: {
       type: String,
-      required: [true, 'A tour must have a cover image'],
+      required: [true, "A tour must have a cover image"],
     },
     images: [String],
     createAt: {
@@ -96,8 +96,8 @@ const tourSchema = new mongoose.Schema(
       // at least have 2 properties (first two)
       type: {
         type: String,
-        default: 'Point',
-        enum: ['Point'],
+        default: "Point",
+        enum: ["Point"],
       },
       coordinates: [Number], // array of numbers
       address: String,
@@ -107,8 +107,8 @@ const tourSchema = new mongoose.Schema(
       {
         type: {
           type: String,
-          default: 'Point',
-          enum: ['Point'],
+          default: "Point",
+          enum: ["Point"],
         },
         coordinates: [Number],
         address: String,
@@ -116,7 +116,7 @@ const tourSchema = new mongoose.Schema(
         day: Number, // when to go
       },
     ],
-    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+    guides: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
     //reference: a relation between two different places
   },
   {
@@ -125,7 +125,7 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
-tourSchema.virtual('durationWeeks').get(function () {
+tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
 
@@ -135,20 +135,20 @@ tourSchema.index({ slug: 1 });
 // after each change, we have to re-send get method for a couple of times
 // to make sure it has been updated and fetch back correct result
 // index will cause consuming extra data size on mongodb
-tourSchema.index({ startLocation: '2dsphere' });
+tourSchema.index({ startLocation: "2dsphere" });
 // Virtual populate
 // real data is not persist in db
-tourSchema.virtual('reviews', {
-  ref: 'Review',
-  foreignField: 'tour', // where tour's id is stored
-  localField: '_id', // tour
+tourSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "tour", // where tour's id is stored
+  localField: "_id", // tour
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 // not on insertMany
 
 // "save": is called hook
-tourSchema.pre('save', function (next) {
+tourSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
@@ -186,8 +186,8 @@ tourSchema.pre(/^find/, function (next) {
 tourSchema.pre(/^find/, function (next) {
   this.populate({
     // this current query
-    path: 'guides',
-    select: '-__v -passwordChangedAt',
+    path: "guides",
+    select: "-__v -passwordChangedAt",
   });
   next();
 });
@@ -206,9 +206,9 @@ tourSchema.post(/^find/, function (docs, next) {
 //   console.log(this.pipeline());
 //   next();
 // });
-tourSchema.pre('aggregate', function (next) {
+tourSchema.pre("aggregate", function (next) {
   const [things] = this.pipeline();
-  if (Object.keys(things)[0] !== '$geoNear') {
+  if (Object.keys(things)[0] !== "$geoNear") {
     this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
   }
   // console.log(this.pipeline());
@@ -216,6 +216,6 @@ tourSchema.pre('aggregate', function (next) {
 });
 
 // create a model
-const Tour = mongoose.model('Tour', tourSchema);
+const Tour = mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;

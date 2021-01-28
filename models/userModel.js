@@ -1,33 +1,33 @@
-const crypto = require('crypto');
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
+const crypto = require("crypto");
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 // name, email, photo (string), password, passwordConfirm
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A user must have a name'], // a validator
+    required: [true, "A user must have a name"], // a validator
   }, //schema type options, can be different type
   email: {
     type: String,
-    required: [true, 'A user must have an email'],
+    required: [true, "A user must have an email"],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, "Please provide a valid email"],
   },
   photo: {
     type: String,
-    default: 'default.jpg',
+    default: "default.jpg",
   },
   role: {
     type: String,
-    enum: ['user', 'guide', 'lead-guide', 'admin'],
-    default: 'user',
+    enum: ["user", "guide", "lead-guide", "admin"],
+    default: "user",
   },
   password: {
     type: String,
-    required: [true, 'A user must have a password'],
+    required: [true, "A user must have a password"],
     minlength: 8,
     select: false,
   },
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
         return val === this.password;
         // this only points to current doc on new document creation
       },
-      message: 'Password must consist',
+      message: "Password must consist",
     },
     select: false,
   },
@@ -59,8 +59,8 @@ const userSchema = new mongoose.Schema({
 // only run this function only if password was actually modified
 
 // we need to comment this middleware when we import users json file into db, cuz psw will be encrypt again.
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
   // to hash password, becrypt
@@ -72,8 +72,8 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) {
+userSchema.pre("save", function (next) {
+  if (!this.isModified("password") || this.isNew) {
     return next();
   }
   this.passwordChangedAt = Date.now() - 1000; // reduce created time, sometimes this process is slow, and token will be created before this changed to db
@@ -109,12 +109,12 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 };
 
 userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
+  const resetToken = crypto.randomBytes(32).toString("hex");
 
   this.passwordResetToken = crypto
-    .createHash('sha256')
+    .createHash("sha256")
     .update(resetToken)
-    .digest('hex');
+    .digest("hex");
 
   // console.log({ resetToken }, this.passwordResetToken);
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
@@ -122,6 +122,6 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

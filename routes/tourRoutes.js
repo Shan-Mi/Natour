@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   aliasTopTours,
   getAllTours,
@@ -12,9 +12,9 @@ const {
   getDistances,
   uploadTourImages,
   resizeTourImages,
-} = require('../controllers/tourController');
-const { protect, restrictTo } = require('../controllers/authController');
-const reviewRouter = require('./reviewRoutes');
+} = require("../controllers/tourController");
+const { protect, restrictTo } = require("../controllers/authController");
+const reviewRouter = require("./reviewRoutes");
 
 const router = express.Router();
 
@@ -26,41 +26,41 @@ const router = express.Router();
 // If not, send back 400 (bad request)
 
 // we use middleware first, to do the query thing
-router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+router.route("/top-5-cheap").get(aliasTopTours, getAllTours);
 
-router.route('/tour-stats').get(getTourStats);
+router.route("/tour-stats").get(getTourStats);
 router
-  .route('/monthly-plan/:year')
-  .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
+  .route("/monthly-plan/:year")
+  .get(protect, restrictTo("admin", "lead-guide", "guide"), getMonthlyPlan);
 
 router
-  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .route("/tours-within/:distance/center/:latlng/unit/:unit")
   .get(getToursWithin);
 // /tours-within?within=233&center=-40,45&unit=mi
 // /tours-within/233/center/-40,45/unit/mi
 
-router.route('/distances/:latlng/unit/:unit').get(getDistances);
+router.route("/distances/:latlng/unit/:unit").get(getDistances);
 
 // all users should get all tours / tour without authentication
 router
-  .route('/')
+  .route("/")
   .get(getAllTours)
-  .post(protect, restrictTo('admin', 'lead-guide'), postTour);
+  .post(protect, restrictTo("admin", "lead-guide"), postTour);
 
 router
-  .route('/:id')
+  .route("/:id")
   .get(getTour)
   .patch(
     protect,
-    restrictTo('admin', 'lead-guide'),
+    restrictTo("admin", "lead-guide"),
     uploadTourImages,
     resizeTourImages,
     updateTour
   )
-  .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
+  .delete(protect, restrictTo("admin", "lead-guide"), deleteTour);
 
 // router is middleware, we can use .use on it, mounting a router
-router.use('/:tourId/reviews', reviewRouter);
+router.use("/:tourId/reviews", reviewRouter);
 
 module.exports = router;
 // restrictTo('admin', 'lead-guide'),
