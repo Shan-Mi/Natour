@@ -5,11 +5,8 @@ const User = require("../models/userModel");
 const Booking = require("../models/bookingModel");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
-  // 1) Get tour data from collection
   const tours = await Tour.find();
-  // 2) Build template
 
-  // 3) Render that template, using tour data from 1
   res
     .status(200)
     .set(
@@ -23,7 +20,6 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   next();
 });
 
-// async function always needs next
 exports.getTour = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const tour = await Tour.findOne({ slug }).populate({
@@ -67,10 +63,8 @@ exports.getAccount = (req, res) => {
 };
 
 exports.getMytours = catchAsync(async (req, res, next) => {
-  // 1) Find all bookings
   const bookings = await Booking.find({ user: req.user.id });
 
-  // 2) Find tours with the returned IDs
   const tourIds = bookings.map((item) => item.tour);
   const tours = await Tour.find({ _id: { $in: tourIds } });
 

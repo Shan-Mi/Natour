@@ -108,10 +108,6 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/bookings", bookingRouter);
 
 app.all("*", (req, res, next) => {
-  // const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-  // err.status = 'fail';
-  // err.statusCode = 404;
-
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
@@ -119,7 +115,3 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 module.exports = app;
-
-// app is mainly used for middleware declarations
-
-// we can use app.use to use any middleware

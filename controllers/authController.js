@@ -21,7 +21,6 @@ const createSendToken = (user, statusCode, req, res) => {
     httpOnly: true, // prevent cors attack
     // sameSite: "strict",
     secure: req.secure || req.headers["x-forwarded-proto"] === "https",
-    // Secure,
   };
 
   if (process.env.NODE_ENV === "production") {
@@ -31,9 +30,7 @@ const createSendToken = (user, statusCode, req, res) => {
 
   res.cookie("jwt", token, cookieOptions);
 
-  // remove psw from output
   user.password = undefined;
-  // console.log(user);
 
   res.status(statusCode).json({
     status: "success",
@@ -80,7 +77,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 
   const url = `${req.protocol}://${req.get("host")}/me`;
-  // console.log(url);
+
   await new Email(newUser, url).sendWelcome();
   // now we cannot register as an admin
   createSendToken(newUser, 201, req, res);
@@ -138,7 +135,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-  // console.log(token);
+
   if (!token) {
     return next(
       new AppError("You are not logged in, please login to get access", 401)
